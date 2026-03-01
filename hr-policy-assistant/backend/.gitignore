@@ -1,0 +1,38 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+bin/
+include/
+lib/
+share/
+pyvenv.cfg
+
+# Environment Variables (SENSITIVE)
+.env
+.flaskenv
+
+# Vector Database / Local Data
+# Don't commit your local ChromaDB or uploaded PDFs
+vector_db/
+data/
+*.db
+*.sqlite3
+
+# AI/Machine Learning
+# Ignore locally downloaded models or logs
+.cache/
+logs/
+*.log
+
+# Editor/OS Specific
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
