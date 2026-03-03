@@ -1,20 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { RefreshCw, PanelLeftOpen } from "lucide-react";
 
-// IMPORTANT: Component Imports
-import Sidebar from "./components/Sidebar";
+// Component Imports
 import MessageList from "./components/MessageList";
 import ChatInput from "./components/ChatInput";
+import Header from "./components/Header";
 
 const App = () => {
-  // UI States
-  const [showSidebar, setShowSidebar] = useState(true);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-
-  // Data States
   const [messages, setMessages] = useState([
     {
       role: "assistant",
@@ -23,18 +18,28 @@ const App = () => {
     },
   ]);
 
-  const history = [
-    { id: 1, title: "Employee Benefits 2024", date: "2 hours ago" },
-    { id: 2, title: "Remote Work Policy", date: "Yesterday" },
-    { id: 3, title: "Sick Leave Procedures", date: "Mar 1, 2026" },
-  ];
-
   const scrollRef = useRef(null);
   const fileInputRef = useRef(null);
 
+  // Auto-scroll logic
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading, isUploading]);
+
+  const handleReset = async () => {
+    try {
+      await axios.post("http://localhost:8000/reset");
+      setMessages([
+        {
+          role: "assistant",
+          content:
+            "Chat history cleared. How can I help you with a new inquiry?",
+        },
+      ]);
+    } catch (err) {
+      console.error("Reset failed:", err);
+    }
+  };
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
@@ -93,45 +98,11 @@ const App = () => {
   };
 
   return (
-    <div className="flex h-screen bg-[#F8FAFC] overflow-hidden font-sans">
-      {/* Sidebar Component */}
-      <Sidebar
-        history={history}
-        isVisible={showSidebar}
-        setIsVisible={setShowSidebar}
-      />
+    /* h-[100dvh] is vital for mobile to prevent the keyboard from pushing content off-screen */
+    <div className="flex flex-col h-screen h-[100dvh] bg-[#FBFBFE] font-sans text-slate-900 overflow-hidden">
+      <Header onReset={handleReset} />
 
-      <main className="flex-1 flex flex-col relative">
-        {/* Top Navigation */}
-        <header className="h-16 bg-white/40 backdrop-blur-md border-b border-slate-100 px-8 flex items-center justify-between z-10">
-          <div className="flex items-center gap-4">
-            {!showSidebar && (
-              <button
-                onClick={() => setShowSidebar(true)}
-                className="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all"
-              >
-                <PanelLeftOpen size={22} />
-              </button>
-            )}
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 bg-emerald-500 rounded-full animate-pulse"></span>
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-                System Status: Active
-              </span>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => window.location.reload()}
-              className="p-2 text-slate-400 hover:bg-slate-100 rounded-lg transition-all"
-            >
-              <RefreshCw size={18} />
-            </button>
-            <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 border-2 border-white shadow-sm"></div>
-          </div>
-        </header>
-
-        {/* Message Container Component */}
+      <main className="flex-1 flex flex-col min-w-0 relative overflow-hidden">
         <MessageList
           messages={messages}
           isLoading={isLoading}
@@ -139,7 +110,6 @@ const App = () => {
           scrollRef={scrollRef}
         />
 
-        {/* Input Bar Component */}
         <ChatInput
           input={input}
           setInput={setInput}

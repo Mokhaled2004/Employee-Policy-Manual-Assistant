@@ -26,3 +26,5 @@ pypdf
 sentence-transformers
 pydantic
 requests
+
+flashrank
