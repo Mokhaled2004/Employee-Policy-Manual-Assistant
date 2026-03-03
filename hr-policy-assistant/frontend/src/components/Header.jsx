@@ -17,14 +17,8 @@ const Header = ({ onReset }) => {
 
           <div className="flex flex-col">
             <h1 className="text-xs font-black uppercase tracking-tight text-slate-900 md:text-base">
-              Guardrail <span className="text-indigo-600">AI</span>
+              AskMeAPolicy <span className="text-indigo-600">AI</span>
             </h1>
-            <div className="flex items-center gap-1">
-              <Activity size={10} className="text-emerald-500" />
-              <span className="text-[9px] md:text-[10px] font-bold tracking-[0.1em] text-slate-400">
-                AUDITOR LIVE
-              </span>
-            </div>
           </div>
         </div>
 
